@@ -5,4 +5,4 @@ import jtalk
 import sys
 
 if __name__ == "__main__":
-    jtalk.jtalk(ssy.argv[1])
+    jtalk.jtalk(sys.argv[1])
