@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import RPi.GPIO as GPIO
 from time import sleep
 import wave
@@ -8,13 +9,13 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(18, GPIO.IN)
 
 try:
-        while True:
-                if GPIO.input(18) == 1:
+	while True:
+		if GPIO.input(18) == 1:
 			jtalk.jtalk("センサーだよ！")
-            wf = wave.open("open_jtalk.wav", "r")
+			wf = wave.open("open_jtalk.wav", "r")
 			sleep(float(wf.getnframes()) / wf.getframerate())
 
 except KeyboardInterrupt:
-        pass
+	pass
 
 GPIO.cleanup()
