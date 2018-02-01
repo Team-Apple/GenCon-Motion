@@ -22,8 +22,9 @@ def get_file_message(path):
     return m_list[0]
 
 def make_sentence(mode, title, memo):
-    message = get_file_message(mode + '.txt')
-    out = message.replace('-', title.encode('utf_8'))
+    out = get_file_message(mode + '.txt')
+    if not title == '':
+        out = out.replace('-', title.encode('utf_8'))
     if not memo == '':
         memorize = get_file_message('memo.txt')
         memo_out = memorize.replace('-', memo.encode('utf_8'))
