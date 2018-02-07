@@ -1,7 +1,9 @@
+#coding:utf-8
 import make_sentence
 import datetime
 import json
 import requests
+import commands
 
 def str_to_date(str_date_time):
     str_date = str_date_time.split(' ')[0]
@@ -24,9 +26,48 @@ def get_talk_list():
     today = datetime.date(now.year, now.month, now.day)
     tommorow = today + datetime.timedelta(days=1)
     pm = datetime.time(13,0,0)
-    test_time = datetime.time(18,0,0)
+
+    test_time = datetime.time(18,0,0)#Demo
+
+    #Get announcements
+    trash = None
+    exchange = None
+    weather = None
+    url = 'https://gencon-web.herokuapp.com/api/announcements.json'
+    req = requests.get(url)
+    announce_list = json.loads(req.text)
+    for announce in announce_list:
+        if announce['mode'] == 'trash': trash = announce['timing']
+        elif announce['mode'] == 'exchange': exchange = announce['timing']
+        elif announce['mode'] == 'weather': weather = announce['timing']
+    print trash
+    print exchange
+    print weather
+
     #Night
     if test_time >= pm:
+        """
+        if (trash is not None) and (not trash):
+            print 'trash'
+            mode = 'trash'
+            url = 'https://gencon-web.herokuapp.com/api/settings/trash'
+            req = requests.get(url)
+            title = req.text
+            if not title == 'なし':
+                sentence = make_sentence.make_sentence(mode, title)
+                talk_list.append([sentence, 1])
+        if (exchange is not None) and (not exchange):
+            url = 'https://gencon-web.herokuapp.com/api/settings/exchange'
+            req = requests.get(url)
+            result = req.text
+            args = result.split('/')
+            sentence = commands.getoutput('ruby genconAPI.rb exchange {0} {1}'.format(args[0], args[1]))
+            talk_list.append([sentence, 1])
+        """
+        if (weather is not None) and (not weather):
+            sentence = commands.getoutput('ruby genconAPI.rb weather')
+            talk_list.append([sentence, 1])
+
         #tommorow event
         mode = 'b_event'
         url = 'https://gencon-web.herokuapp.com/api/events.json?start_at_date=' + str(tommorow)
@@ -68,6 +109,7 @@ def get_talk_list():
             talk_list.append([sentence, value])
     #Moring
     else:
+
         #today event
         mode = 'c_event'
         url = 'https://gencon-web.herokuapp.com/api/events.json?start_at_date=' + str(today)
@@ -95,12 +137,6 @@ def get_talk_list():
             sentence = make_sentence.make_sentence(mode, title, memo)
             talk_list.append([sentence, priority])
 
-    """
-    url = 'https://gencon-web.herokuapp.com/api/announcements.json'
-    req = requests.get(url)
-    lis = json.loads(req.text)
-    print lis
-    """
     talk_list = sorted(talk_list, key=lambda x: x[1])
     out = []
     for talk in talk_list:

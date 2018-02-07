@@ -135,4 +135,9 @@ class Main
 end
 main = Main.new
 #puts main.get_exchange('ALL','JPY_T')
-puts main.get_weather('東京地方')
+
+if ARGV[0] == "exchange" then
+    puts main.get_exchange(ARGV[1], ARGV[2])
+elsif ARGV[0] == "weather" then
+    puts main.get_weather('東京地方')
+end
