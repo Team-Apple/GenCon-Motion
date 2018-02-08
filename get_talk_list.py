@@ -27,7 +27,7 @@ def get_talk_list():
     tommorow = today + datetime.timedelta(days=1)
     pm = datetime.time(13,0,0)
 
-    test_time = datetime.time(18,0,0)#Demo
+    test_time = datetime.time(10,0,0)#Demo
 
     #Get announcements
     trash = None
@@ -46,24 +46,22 @@ def get_talk_list():
 
     #Night
     if test_time >= pm:
-        """
         if (trash is not None) and (not trash):
             print 'trash'
             mode = 'trash'
             url = 'https://gencon-web.herokuapp.com/api/settings/trash'
             req = requests.get(url)
             title = req.text
-            if not title == 'なし':
-                sentence = make_sentence.make_sentence(mode, title)
+            if not title == u'なし':
+                sentence = make_sentence.make_sentence(mode, title, '')
                 talk_list.append([sentence, 1])
         if (exchange is not None) and (not exchange):
             url = 'https://gencon-web.herokuapp.com/api/settings/exchange'
             req = requests.get(url)
             result = req.text
             args = result.split('/')
-            sentence = commands.getoutput('ruby genconAPI.rb exchange {0} {1}'.format(args[0], args[1]))
+            sentence = commands.getoutput('ruby genconAPI.rb exchange ' + str(args[0]) + ' ' + str(args[1]))
             talk_list.append([sentence, 1])
-        """
         if (weather is not None) and (not weather):
             sentence = commands.getoutput('ruby genconAPI.rb weather')
             talk_list.append([sentence, 1])
@@ -109,6 +107,25 @@ def get_talk_list():
             talk_list.append([sentence, value])
     #Moring
     else:
+        if (trash is not None) and trash:
+            print 'trash'
+            mode = 'trash'
+            url = 'https://gencon-web.herokuapp.com/api/settings/trash'
+            req = requests.get(url)
+            title = req.text
+            if not title == u'なし':
+                sentence = make_sentence.make_sentence(mode, title, '')
+                talk_list.append([sentence, 1])
+        if (exchange is not None) and exchange:
+            url = 'https://gencon-web.herokuapp.com/api/settings/exchange'
+            req = requests.get(url)
+            result = req.text
+            args = result.split('/')
+            sentence = commands.getoutput('ruby genconAPI.rb exchange ' + str(args[0]) + ' ' + str(args[1]))
+            talk_list.append([sentence, 1])
+        if (weather is not None) and weather:
+            sentence = commands.getoutput('ruby genconAPI.rb weather')
+            talk_list.append([sentence, 1])
 
         #today event
         mode = 'c_event'
